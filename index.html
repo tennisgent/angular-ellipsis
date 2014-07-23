@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html ng-app="my-app" ng-controller="my-ctrl">
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
+<style id="jsbin-css">
+li{
+  max-height: 80px;
+}
+</style>
+</head>
+<body>
+  <ul>
+    <li ng-repeat="text in texts" ellipsis>
+      {{text}}
+    </li>
+  </ul>
+<script>
+angular
+  .module('my-app', [])
+  .controller('my-ctrl', function($scope){
+    $scope.maxHeight = 80;
+    $scope.texts = [
+      'In nec tempor erat. Proin nec eros ut tellus pharetra varius. Donec vel viverra ante. Aliquam id magna est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse molestie congue aliquam. Nulla porttitor massa massa, et ultricies nunc aliquam quis. Duis in consequat elit. Proin eros orci, blandit vitae purus vitae, luctus tincidunt dui. Etiam mi erat, scelerisque at arcu sed, mattis blandit orci. Aenean hendrerit lacinia risus, eu tincidunt eros ullamcorper ac. Donec id ante libero. Aenean vulputate ut augue sed varius. Donec ornare vitae nisl a scelerisque. Morbi et mi elit. Suspendisse convallis vitae turpis non varius. Nullam.',
+      'Quisque vitae tincidunt sem. Suspendisse et consequat velit, ut suscipit est. Duis vel ligula auctor elit scelerisque tristique. Suspendisse in neque ornare, pharetra purus a, pellentesque leo. Aenean eu ipsum cursus, volutpat velit nec, imperdiet purus. In iaculis condimentum eros, ut pretium dui elementum non. Nullam pulvinar ultrices tortor, nec elementum sapien imperdiet non. Praesent volutpat neque a nunc convallis dignissim. Etiam sit amet mauris convallis, lobortis orci et, rhoncus nibh. Fusce pellentesque suscipit pharetra. In molestie nulla a lectus fermentum, rhoncus rutrum lectus blandit. Integer posuere risus ac elit congue pharetra. Pellentesque pretium laoreet risus, quis euismod turpis malesuada.',
+      'Duis viverra pretium suscipit. Curabitur sollicitudin eleifend libero, eget molestie enim venenatis nec. Cras volutpat magna lacus, et rutrum tortor tempor in. Nunc volutpat, quam sed suscipit tempor, diam lacus pellentesque mauris, eu lobortis ligula quam sit amet dui. Sed ut lectus at ante tristique laoreet varius eu metus. Nulla eget enim congue dui euismod auctor. Praesent at pellentesque est, a scelerisque arcu. Morbi quis libero nisi. Maecenas elementum mattis tortor ac volutpat. Nunc interdum sapien non tortor ullamcorper imperdiet. Suspendisse sit amet aliquam urna. Nullam sit amet nisl lectus. Cras nisl nunc, vulputate vel justo id, elementum molestie elit.'
+    ]
+  })
+  .directive('ellipsis', function($timeout, $window){
+  function shrinkElem(elem, charsAtATime){
+    var counter = 0;
+    while(elem.scrollHeight > elem.clientHeight){
+      elem.innerHTML = elem.innerHTML.substr(0, elem.innerHTML.length - (charsAtATime || 8)).trim();
+      counter++;
+    }
+    elem.innerHTML = elem.innerHTML.substr(0, elem.innerHTML.length - 3).trim() + '...';
+    return counter;
+  }
+    return {
+      link: function(scope, elem){
+        elem.css({overflow: 'hidden'});
+        function runShrink(){
+          var counter = shrinkElem(elem[0]);
+          console.log(counter);
+        }
+        $timeout(runShrink, 10);
+        angular.element($window).on('resize', runShrink);
+      }
+    }
+  });
+</script>
+</body>
+</html>
